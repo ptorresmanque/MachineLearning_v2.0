@@ -1,6 +1,7 @@
 import scipy as sp
 import matplotlib.pyplot as plt
 from scipy.optimize import fmin_bfgs
+from statistics import mean
 
 # Define sigmoid, cost function and gradients
 def sigmoid(z):
