@@ -40,9 +40,9 @@ for i in range(1, 12):
                 rd4 = np.random.randint(-2, 2)
 
                 ancho = abs((int(sup_der[0].text)+ rd1) - (int(sup_izq[0].text) + rd2))
-                print ancho
+                print(ancho)
                 alto = abs((int(sup_der[1].text) + rd3) - (int(inf_der[1].text)) + rd4)
-                print alto
+                print(alto)
                 area = ancho * alto
 
                 c.execute("insert into features (ancho, alto, area, clase) values (?, ?, ?, ?)",
@@ -52,6 +52,6 @@ for i in range(1, 12):
 
 
 for row in c.execute('SELECT * FROM features'): # mostrar base de datos
-    print row
+    print (row)
 
 conn.close()
