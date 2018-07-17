@@ -3,9 +3,9 @@ import time
 
 class NeuralNetwork(object):
 
-	def __init__(self, inputs, hidden, outputs, activation='tanh', output_act='softmax'):
+	def __init__(self, inputs, hidden, outputs, activation='tanh', output_act='sigmoid'):
 		
-		# Hidden layer activation function
+		# Función de activación de capa oculta
 		if activation == 'sigmoid':
 			self.activation = sigmoid
 			self.activation_prime = sigmoid_prime
@@ -16,7 +16,7 @@ class NeuralNetwork(object):
 			self.activation = linear
 			self.activation_prime = linear_prime
 
-		# Output layer activation function
+		# Función de activación de la capa de salida
 		if output_act == 'sigmoid':
 			self.output_act = sigmoid
 			self.output_act_prime = sigmoid_prime
@@ -30,84 +30,84 @@ class NeuralNetwork(object):
 			self.output_act = softmax
 			self.output_act_prime = linear_prime
 
-		# Weights initializarion
+		# Inicialización de pesos
 		self.wi = np.random.randn(inputs, hidden)/np.sqrt(inputs)
 		self.wo = np.random.randn(hidden + 1, outputs)/np.sqrt(hidden)
 
-		# Weights updates initialization
+		# Inicialización de pesos de actualizacion
 		self.updatei = 0
 		self.updateo = 0
 
 
 	def feedforward(self, X):
 
-		# Hidden layer activation
+		# Activación de capa oculta
 		ah = self.activation(np.dot(X, self.wi))
 			
-		# Adding bias to the hidden layer results
+		# Agregar baias a los resultados de la capa oculta
 		ah = np.concatenate((np.ones(1).T, np.array(ah)))
 
-		# Outputs
+		# salidas
 		y = self.output_act(np.dot(ah, self.wo))
 
-		# Return the results
+		# Return los resultados
 		return y
 
 
 	def fit(self, X, y, epochs=10, learning_rate=0.2, learning_rate_decay = 0 , momentum = 0, verbose = 0):
 		
-		# Timer start
+		# Timer 
 		startTime = time.time()
 
-		# Epochs loop
+		
 		for k in range(epochs):
 	
 			# Dataset loop
 			for i in range(X.shape[0]):
 
-				# Hidden layer activation
+				# Activación de capa oculta
 				ah = self.activation(np.dot(X[i], self.wi))
 			
-				# Adding bias to the hidden layer
+				# Agregar baias a la capa oculta
 				ah = np.concatenate((np.ones(1).T, np.array(ah))) 
 
-				# Output activation
+				# salida
 				ao = self.output_act(np.dot(ah, self.wo))
 
 				# Deltas	
 				deltao = np.multiply(self.output_act_prime(ao),y[i] - ao)
 				deltai = np.multiply(self.activation_prime(ah),np.dot(self.wo, deltao))
 
-				# Weights update with momentum
+				# Actualización de pesas con momentun
 				self.updateo = momentum*self.updateo + np.multiply(learning_rate, np.outer(ah,deltao))
 				self.updatei = momentum*self.updatei + np.multiply(learning_rate, np.outer(X[i],deltai[1:]))
 
-				# Weights update
+				# actualizacion de pesos
 				self.wo += self.updateo
 				self.wi += self.updatei
 
-			# Print training status
+			# impresion del status
 			if verbose == 1:
-				print ('EPOCH: {0:4d}/{1:4d}\t\tLearning rate: {2:4f}\t\tElapse time [seconds]: {3:5f}'.format(k,epochs,learning_rate, time.time() - startTime))
+				print ('Ciclo: {0:4d}/{1:4d}\t\tLearning rate: {2:4f}\t\tTiempo [Segundos]: {3:5f}'.format(k,epochs,learning_rate, time.time() - startTime))
 				
-			# Learning rate update
+			# actualizacion del porcentaje de entrenamiento(learning rate)
 			learning_rate = learning_rate * (1 - learning_rate_decay)
 
 	def predict(self, X): 
 
-		# Allocate memory for the outputs
+		# arreglo para las salidas
 		y = np.zeros([X.shape[0],self.wo.shape[1]])
 
-		# Loop the inputs
+		# ciclo de la entrada
 		for i in range(0,X.shape[0]):
 
 			y[i] = self.feedforward(X[i])
 
-		# Return the results
+		# Return de los resultados
 		return y
 
 
-# Activation functions
+# Posibles funciones de activacion
 def sigmoid(x):
 	return 1.0/(1.0 + np.exp(-x))
 

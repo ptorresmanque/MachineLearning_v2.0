@@ -16,7 +16,7 @@ def targetToVector(x):
 
 if __name__ == '__main__':
 
-	# Digits dataset loading
+	# Carga de datos de dígitos
 	digits = datasets.load_digits()
 	X = preprocessing.scale(digits.data.astype(float))
 	y = targetToVector(digits.target)
@@ -24,14 +24,14 @@ if __name__ == '__main__':
 	# Cross valitation
 	X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2, random_state=0)
 	
-	# Neural Network initialization
+	# Neural Network inicializacion
 	NN = NeuralNetwork(64,60,10, output_act = 'sigmoid')
 	NN.fit(X_train,y_train, epochs = 50, learning_rate = .1, learning_rate_decay = .01, verbose = 1)
 
-	# NN predictions
+	# NN predicciones
 	y_predicted = NN.predict(X_test)
 
-	# Metrics
+	# metricas
 	y_predicted = np.argmax(y_predicted, axis=1).astype(int)
 	y_test = np.argmax(y_test, axis=1).astype(int)
 
