@@ -25,7 +25,7 @@ if __name__ == '__main__':
 	X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2, random_state=0)
 	
 	# Neural Network initialization
-	NN = NeuralNetwork(64,60,10, output_act = 'softmax')
+	NN = NeuralNetwork(64,60,10, output_act = 'sigmoid')
 	NN.fit(X_train,y_train, epochs = 50, learning_rate = .1, learning_rate_decay = .01, verbose = 1)
 
 	# NN predictions
